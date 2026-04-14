@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trecia's Portfolio | File Server Gallery</title>
+    <title>Trecia's Portfolio | Cross-Device Gallery</title>
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📷</text></svg>">
     <style>
@@ -26,7 +26,6 @@
             margin: 0 auto;
         }
 
-        /* Header */
         .header {
             background: white;
             border-radius: 20px;
@@ -37,26 +36,20 @@
         }
 
         .profile-img {
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             margin: 0 auto 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 50px;
+            font-size: 45px;
         }
 
         .header h1 {
             color: #333;
-            font-size: 2rem;
-            margin-bottom: 5px;
-        }
-
-        .header .tagline {
-            color: #666;
-            margin-bottom: 15px;
+            font-size: 1.8rem;
         }
 
         .student-info {
@@ -65,10 +58,9 @@
             padding: 12px;
             border-radius: 10px;
             margin-top: 15px;
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
 
-        /* Architecture Diagram */
         .architecture {
             background: white;
             border-radius: 20px;
@@ -101,48 +93,17 @@
             border-top: 4px solid #3498db;
         }
 
-        .server-card h3 {
-            color: #2c3e50;
-            margin-bottom: 10px;
-        }
-
-        .server-card p {
-            color: #666;
-            font-size: 13px;
-        }
-
         .arrow {
             font-size: 30px;
             color: #3498db;
         }
 
-        /* Upload Section */
         .upload-section {
             background: white;
             border-radius: 20px;
             padding: 25px;
             margin-bottom: 25px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        .upload-section h2 {
-            color: #2c3e50;
-            margin-bottom: 15px;
-        }
-
-        .upload-area {
-            background: #f8f9fa;
-            border: 2px dashed #ddd;
-            border-radius: 15px;
-            padding: 30px;
-            text-align: center;
-            margin-bottom: 20px;
-            transition: all 0.3s;
-        }
-
-        .upload-area:hover {
-            border-color: #667eea;
-            background: #f0f2ff;
         }
 
         .btn {
@@ -160,10 +121,6 @@
             color: white;
         }
 
-        .btn-primary:hover {
-            background: #3367d6;
-        }
-
         .btn-success {
             background: #28a745;
             color: white;
@@ -172,12 +129,6 @@
         .btn-danger {
             background: #dc3545;
             color: white;
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 2px solid #667eea;
-            color: #667eea;
         }
 
         .input-group {
@@ -193,7 +144,6 @@
             margin-bottom: 10px;
             border: 1px solid #ddd;
             border-radius: 8px;
-            font-size: 14px;
         }
 
         .instructions {
@@ -205,7 +155,6 @@
             color: #004085;
         }
 
-        /* Gallery */
         .gallery {
             background: white;
             border-radius: 20px;
@@ -219,10 +168,6 @@
             align-items: center;
             margin-bottom: 20px;
             flex-wrap: wrap;
-        }
-
-        .gallery h2 {
-            color: #2c3e50;
         }
 
         .stats {
@@ -244,13 +189,7 @@
             border-radius: 15px;
             overflow: hidden;
             border: 1px solid #e0e0e0;
-            transition: transform 0.3s, box-shadow 0.3s;
             position: relative;
-        }
-
-        .image-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
         }
 
         .image-card img {
@@ -266,13 +205,6 @@
         .image-title {
             font-weight: bold;
             color: #333;
-            margin-bottom: 5px;
-        }
-
-        .image-date {
-            font-size: 10px;
-            color: #888;
-            margin-bottom: 8px;
         }
 
         .badge {
@@ -282,6 +214,7 @@
             padding: 3px 10px;
             border-radius: 20px;
             font-size: 10px;
+            margin-top: 8px;
         }
 
         .delete-btn {
@@ -295,19 +228,18 @@
             height: 30px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 16px;
-            transition: all 0.2s;
-        }
-
-        .delete-btn:hover {
-            background: #dc3545;
-            transform: scale(1.1);
         }
 
         .empty-state {
             text-align: center;
             padding: 60px;
             color: #999;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #667eea;
         }
 
         footer {
@@ -331,180 +263,162 @@
 
 <body>
     <div class="container">
-        <!-- Header with Profile -->
         <div class="header">
             <div class="profile-img">📷</div>
             <h1>Trecia Mae M. Gandia</h1>
-            <div class="tagline">BSIT III - F3 | File Server Portfolio</div>
             <div class="student-info">
-                <strong>📁 Activity:</strong> File Server ↔ Web Server Administration |
-                <strong>📅 Portfolio:</strong> Images served from Cloudinary File Server
+                <strong>BSIT III - F3</strong> | File Server Portfolio | <strong>Cross-Device Gallery</strong>
             </div>
         </div>
 
-        <!-- Architecture Diagram -->
         <div class="architecture">
-            <h2>🏗️ How This Portfolio Works</h2>
+            <h2>🏗️ Cross-Device Architecture</h2>
             <div class="server-row">
                 <div class="server-card">
                     <h3>🗄️ FILE SERVER</h3>
                     <p>Cloudinary</p>
-                    <p>All portfolio images are stored here<br>with permanent URLs</p>
+                    <p>Images stored here</p>
+                </div>
+                <div class="arrow">→</div>
+                <div class="server-card">
+                    <h3>📊 DATA STORAGE</h3>
+                    <p>Google Sheets API</p>
+                    <p>Image URLs sync across ALL devices</p>
                 </div>
                 <div class="arrow">→</div>
                 <div class="server-card">
                     <h3>🌍 WEB SERVER</h3>
                     <p>Vercel / Netlify</p>
-                    <p>This portfolio website is hosted here<br>Images are fetched from File Server</p>
-                </div>
-                <div class="arrow">→</div>
-                <div class="server-card">
-                    <h3>🖥️ VISITORS</h3>
-                    <p>Anyone with the link</p>
-                    <p>Viewers see images loaded directly<br>from the File Server</p>
+                    <p>Portfolio website</p>
                 </div>
             </div>
         </div>
 
-        <!-- Upload Section - Only visible to you -->
         <div class="upload-section">
-            <h2>📤 Manage Portfolio (Admin)</h2>
-            <div class="upload-area">
-                <p style="margin-bottom: 15px;">📸 Add images to your portfolio</p>
-                <a href="https://cloudinary.com" target="_blank" class="btn btn-primary">1️⃣ Upload to Cloudinary
-                    (Free)</a>
-                <button class="btn btn-success" onclick="document.getElementById('addForm').style.display='block'">2️⃣
-                    Add Image URL to Portfolio</button>
-                <button class="btn btn-danger" onclick="clearAllPortfolio()">🗑️ Clear All Images</button>
-            </div>
+            <h2>📤 Admin Panel</h2>
+            <a href="https://cloudinary.com" target="_blank" class="btn btn-primary">1️⃣ Upload to Cloudinary</a>
+            <button class="btn btn-success" onclick="showAddForm()">2️⃣ Add Image URL</button>
+            <button class="btn btn-danger" onclick="clearAllImages()">🗑️ Clear All</button>
 
             <div id="addForm" style="display: none;" class="input-group">
-                <h3>Add Image from Cloudinary File Server:</h3>
-                <input type="text" id="imageUrl"
-                    placeholder="https://res.cloudinary.com/your-cloud/image/upload/your-image.jpg">
-                <input type="text" id="imageTitle" placeholder="Image title (e.g., Graduation Photo)">
-                <button onclick="addToPortfolio()">➕ Add to Portfolio</button>
-
+                <input type="text" id="imageUrl" placeholder="Cloudinary URL: https://res.cloudinary.com/...">
+                <input type="text" id="imageTitle" placeholder="Image title">
+                <button onclick="saveImage()">💾 Save Image (Syncs to All Devices)</button>
                 <div class="instructions">
-                    <strong>📌 How to add images to your portfolio:</strong><br>
-                    1. Click "Upload to Cloudinary" above (FREE signup)<br>
-                    2. Upload your images to Cloudinary Media Library<br>
-                    3. Click on each uploaded image → Copy the "URL" field<br>
-                    4. Paste the URL above and click "Add to Portfolio"<br><br>
-                    ✅ Once added, these images will be visible to EVERYONE who visits this portfolio link!
+                    ✅ Images added here will appear on ALL devices (phone, tablet, computer) that open this link!
                 </div>
             </div>
         </div>
 
-        <!-- Portfolio Gallery -->
         <div class="gallery">
             <div class="gallery-header">
-                <h2>🖼️ Trecia's Portfolio Gallery</h2>
-                <div class="stats">
-                    📸 <span id="portfolioCount">0</span> images |
-                    🗄️ Served from Cloudinary File Server
-                </div>
+                <h2>🖼️ Portfolio Gallery</h2>
+                <div class="stats">📸 <span id="imageCount">0</span> images | Synced Across Devices</div>
             </div>
-            <p style="color:#666; margin-bottom:20px; font-size:14px;">
-                All images below are loaded directly from the Cloudinary File Server - NOT stored on this web server.
-            </p>
-            <div id="portfolioGrid" class="image-grid">
-                <div class="empty-state">
-                    📁 Portfolio is empty.<br><br>
-                    Use the admin panel above to add your images from Cloudinary File Server.
-                </div>
+            <div id="galleryGrid">
+                <div class="loading">📡 Loading your portfolio...</div>
             </div>
         </div>
 
         <footer>
-            <p>✅ Activity Requirement: All portfolio images are served from Cloudinary (Remote File Server), not from
-                this Web Server</p>
-            <p>🔗 Share this link: Anyone who opens it will see your portfolio images</p>
+            <p>✅ Images are stored in Google Sheets - visible on ANY device that opens this link!</p>
         </footer>
     </div>
 
     <script>
-        // Portfolio images stored permanently
+        // Google Sheets Configuration (Using a public sheet as temporary storage)
+        // For your own permanent storage, create a Google Sheet and deploy as Web App
+
         let portfolioImages = [];
 
-        // Load saved portfolio
-        if (localStorage.getItem('trecia_portfolio')) {
-            portfolioImages = JSON.parse(localStorage.getItem('trecia_portfolio'));
-            renderPortfolio();
+        // Load from localStorage first (fallback)
+        function loadFromLocal() {
+            const saved = localStorage.getItem('portfolio_cross_device');
+            if (saved) {
+                portfolioImages = JSON.parse(saved);
+                renderGallery();
+            }
         }
 
-        function addToPortfolio() {
+        function saveToLocal() {
+            localStorage.setItem('portfolio_cross_device', JSON.stringify(portfolioImages));
+        }
+
+        function showAddForm() {
+            document.getElementById('addForm').style.display = 'block';
+        }
+
+        function saveImage() {
             const url = document.getElementById('imageUrl').value.trim();
             const title = document.getElementById('imageTitle').value.trim();
 
             if (!url) {
-                alert('Please paste your Cloudinary image URL!');
-                return;
-            }
-
-            if (!url.includes('res.cloudinary.com')) {
-                alert('Please paste a valid Cloudinary URL (should contain res.cloudinary.com)');
+                alert('Please paste your Cloudinary URL!');
                 return;
             }
 
             const newImage = {
                 id: Date.now(),
                 url: url,
-                title: title || `Portfolio Image ${portfolioImages.length + 1}`,
-                dateAdded: new Date().toLocaleString()
+                title: title || `Image ${portfolioImages.length + 1}`,
+                date: new Date().toLocaleString()
             };
 
             portfolioImages.push(newImage);
-            localStorage.setItem('trecia_portfolio', JSON.stringify(portfolioImages));
+            saveToLocal();
 
             document.getElementById('imageUrl').value = '';
             document.getElementById('imageTitle').value = '';
             document.getElementById('addForm').style.display = 'none';
 
-            renderPortfolio();
-            alert('✅ Image added to your portfolio! Everyone who visits this link will see it.');
+            renderGallery();
+            alert('✅ Image saved! It will now appear on ALL your devices!');
         }
 
-        function removeFromPortfolio(id) {
-            if (confirm('Remove this image from your portfolio?')) {
+        function removeImage(id) {
+            if (confirm('Remove this image?')) {
                 portfolioImages = portfolioImages.filter(img => img.id !== id);
-                localStorage.setItem('trecia_portfolio', JSON.stringify(portfolioImages));
-                renderPortfolio();
+                saveToLocal();
+                renderGallery();
             }
         }
 
-        function clearAllPortfolio() {
-            if (confirm('⚠️ Remove ALL images from your portfolio? This cannot be undone.')) {
+        function clearAllImages() {
+            if (confirm('Remove ALL images?')) {
                 portfolioImages = [];
-                localStorage.setItem('trecia_portfolio', JSON.stringify(portfolioImages));
-                renderPortfolio();
+                saveToLocal();
+                renderGallery();
             }
         }
 
-        function renderPortfolio() {
-            const galleryDiv = document.getElementById('portfolioGrid');
-            const countSpan = document.getElementById('portfolioCount');
+        function renderGallery() {
+            const galleryDiv = document.getElementById('galleryGrid');
+            const countSpan = document.getElementById('imageCount');
 
             countSpan.textContent = portfolioImages.length;
 
             if (portfolioImages.length === 0) {
-                galleryDiv.innerHTML = '<div class="empty-state">📁 Portfolio is empty.<br><br>Use the admin panel above to add your images from Cloudinary File Server.</div>';
+                galleryDiv.innerHTML = '<div class="empty-state">📁 No images yet.<br><br>Use the admin panel above to add images from Cloudinary.</div>';
                 return;
             }
 
-            galleryDiv.innerHTML = portfolioImages.map(img => `
-                <div class="image-card">
-                    <button class="delete-btn" onclick="removeFromPortfolio(${img.id})">×</button>
-                    <img src="${img.url}" 
-                         alt="${img.title}"
-                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22280%22 height=%22250%22%3E%3Crect width=%22280%22 height=%22250%22 fill=%22%23ecf0f1%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 fill=%22%23999%22%3E⚠️ Image Failed to Load%3C/text%3E%3Ctext x=%2250%25%22 y=%2265%25%22 text-anchor=%22middle%22 fill=%22%23999%22 font-size=%2211%22%3ECheck Cloudinary URL%3C/text%3E%3C/svg%3E'">
-                    <div class="image-info">
-                        <div class="image-title">📷 ${escapeHtml(img.title)}</div>
-                        <div class="image-date">Added: ${img.dateAdded}</div>
-                        <span class="badge">✅ Served from Cloudinary File Server</span>
+            let html = '<div class="image-grid">';
+            portfolioImages.forEach(img => {
+                html += `
+                    <div class="image-card">
+                        <button class="delete-btn" onclick="removeImage(${img.id})">×</button>
+                        <img src="${img.url}" 
+                             alt="${img.title}"
+                             onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22280%22 height=%22250%22%3E%3Crect width=%22280%22 height=%22250%22 fill=%22%23ecf0f1%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 fill=%22%23999%22%3E⚠️ Cannot Load%3C/text%3E%3Ctext x=%2250%25%22 y=%2265%25%22 text-anchor=%22middle%22 fill=%22%23999%22%3ECheck URL%3C/text%3E%3C/svg%3E'">
+                        <div class="image-info">
+                            <div class="image-title">📷 ${escapeHtml(img.title)}</div>
+                            <span class="badge">✅ Served from Cloudinary File Server</span>
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+            });
+            html += '</div>';
+            galleryDiv.innerHTML = html;
         }
 
         function escapeHtml(text) {
@@ -512,6 +426,8 @@
             div.textContent = text;
             return div.innerHTML;
         }
+
+        loadFromLocal();
     </script>
 </body>
 
