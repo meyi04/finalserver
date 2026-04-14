@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Server vs Web Server</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .student-info {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 1.1rem;
+        }
+
+        .architecture {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .architecture h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .server-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .server-card {
+            flex: 1;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border-top: 4px solid #3498db;
+        }
+
+        .server-card h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .arrow {
+            font-size: 30px;
+            color: #3498db;
+        }
+
+        .add-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .add-section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .upload-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #4285f4;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #3367d6;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .input-group {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .instructions {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 13px;
+            color: #004085;
+        }
+
+        .gallery {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .gallery-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .gallery h2 {
+            color: #2c3e50;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .image-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+            position: relative;
+        }
+
+        .image-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .image-info {
+            padding: 15px;
+        }
+
+        .image-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #27ae60;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            margin: 8px 0;
+        }
+
+        .remove-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 12px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+            color: #999;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 25px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .server-row {
+                flex-direction: column;
+            }
+
+            .arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📁 File Server ↔ Web Server Administration</h1>
+            <div class="student-info">
+                <strong>Name:</strong> Trecia Mae M. Gandia |
+                <strong>Section:</strong> BSIT III-F3
+            </div>
+        </div>
+
+        <div class="architecture">
+            <h2>How It Works</h2>
+            <div class="server-row">
+                <div class="server-card">
+                    <h3>FILE SERVER</h3>
+                    <p>ImgBB / Cloudinary</p>
+                    <p>Your images are uploaded here and get permanent URLs</p>
+                </div>
+                <div class="arrow">→</div>
+                <div class="server-card">
+                    <h3>WEB SERVER</h3>
+                    <p>Vercel / GitHub Pages</p>
+                    <p>This website stores your image URLs permanently in localStorage</p>
+                </div>
+                <div class="arrow">→</div>
+                <div class="server-card">
+                    <h3>CLIENT</h3>
+                    <p>Any Browser</p>
+                    <p>Every time you open the link, your images load from the file server</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="add-section">
+            <h2>Add Files to Your Permanent Gallery</h2>
+
+            <div class="upload-buttons">
+                <a href="https://imgbb.com/upload" target="_blank" class="btn btn-primary">Upload to ImgBB</a>
+                <button class="btn btn-success" onclick="showAddForm()">Add URL to Gallery</button>
+                <button class="btn btn-warning" onclick="viewAllFiles()">View All Saved Files</button>
+                <button class="btn btn-danger" onclick="clearAllFiles()">Clear All Files</button>
+            </div>
+
+            <div id="addForm" style="display: none;" class="input-group">
+                <h3>Paste Your Image URL from File Server:</h3>
+                <input type="text" id="imageUrl" placeholder="https://i.ibb.co/xxxxx/image.jpg">
+                <input type="text" id="imageTitle" placeholder="Image title (e.g., My Photo)">
+                <button onclick="addImage()"> Add to Permanent Gallery</button>
+
+                <div class="instructions">
+                    <strong>How to get a permanent image URL:</strong><br>
+                    1. Click "Upload to ImgBB" button above<br>
+                    2. Click "Start Uploading" → Select your image<br>
+                    3. After upload, click "View image codes"<br>
+                    4. Copy the "Direct URL" (ends with .jpg or .png)<br>
+                    5. Paste it above and click "Add to Permanent Gallery"<br><br>
+                    Your image will be saved permanently and will appear every time you open this website!
+                </div>
+            </div>
+        </div>
+
+        <div class="gallery">
+            <div class="gallery-header">
+                <h2>Your Permanent Gallery</h2>
+                <span id="fileCount" style="background: #e9ecef; padding: 5px 15px; border-radius: 20px;">0 files</span>
+            </div>
+            <p class="gallery-subtitle" style="color:#666; margin-bottom:20px;">
+                These images are NOT stored on this web server. They are fetched directly from the File Server
+                (ImgBB/Cloudinary).
+            </p>
+            <div id="galleryGrid" class="image-grid">
+                <div class="empty-state">
+                    No files yet.<br><br>
+                    Click "Upload to ImgBB" → upload your image → copy the Direct URL → paste it above.<br><br>
+                    Your files will be saved permanently!
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Files are stored permanently in your browser's localStorage + File Server (ImgBB)</p>
+            <p>Every time you open this link, your uploaded images will still be here</p>
+        </footer>
+    </div>
+
+    <script>
+        // Load saved files from localStorage (PERSISTENT STORAGE)
+        let myFiles = [];
+
+        function loadFiles() {
+            const saved = localStorage.getItem('permanent_gallery_files');
+            if (saved) {
+                myFiles = JSON.parse(saved);
+            }
+            renderGallery();
+            updateFileCount();
+        }
+
+        function saveFiles() {
+            localStorage.setItem('permanent_gallery_files', JSON.stringify(myFiles));
+            updateFileCount();
+        }
+
+        function showAddForm() {
+            const form = document.getElementById('addForm');
+            if (form.style.display === 'none') {
+                form.style.display = 'block';
+            } else {
+                form.style.display = 'none';
+            }
+        }
+
+        function addImage() {
+            const url = document.getElementById('imageUrl').value.trim();
+            const title = document.getElementById('imageTitle').value.trim();
+
+            if (!url) {
+                alert('Please paste an image URL from your file server!');
+                return;
+            }
+
+            // Validate URL
+            if (!url.startsWith('http')) {
+                alert(' Please paste a valid URL (starts with http:// or https://)');
+                return;
+            }
+
+            const newFile = {
+                id: Date.now(),
+                url: url,
+                title: title || `Image ${myFiles.length + 1}`,
+                dateAdded: new Date().toLocaleString(),
+                source: 'File Server (ImgBB/Cloudinary)'
+            };
+
+            myFiles.push(newFile);
+            saveFiles();
+
+            // Clear inputs
+            document.getElementById('imageUrl').value = '';
+            document.getElementById('imageTitle').value = '';
+
+            renderGallery();
+            alert('Image added permanently! It will appear every time you open this website.');
+        }
+
+        function removeFile(id) {
+            if (confirm('Remove this image from your gallery?')) {
+                myFiles = myFiles.filter(file => file.id !== id);
+                saveFiles();
+                renderGallery();
+            }
+        }
+
+        function clearAllFiles() {
+            if (confirm('⚠️ WARNING: This will remove ALL your saved images. Are you sure?')) {
+                myFiles = [];
+                saveFiles();
+                renderGallery();
+                alert('All files have been cleared.');
+            }
+        }
+
+        function viewAllFiles() {
+            if (myFiles.length === 0) {
+                alert('No files saved yet. Add some images first!');
+            } else {
+                let message = 'Your Saved Files:\n\n';
+                myFiles.forEach((file, index) => {
+                    message += `${index + 1}. ${file.title}\n   URL: ${file.url.substring(0, 60)}...\n   Added: ${file.dateAdded}\n\n`;
+                });
+                alert(message);
+            }
+        }
+
+        function updateFileCount() {
+            const countSpan = document.getElementById('fileCount');
+            if (countSpan) {
+                countSpan.textContent = `${myFiles.length} file${myFiles.length !== 1 ? 's' : ''}`;
+            }
+        }
+
+        function renderGallery() {
+            const galleryDiv = document.getElementById('galleryGrid');
+
+            if (myFiles.length === 0) {
+                galleryDiv.innerHTML = `
+                    <div class="empty-state">
+                        No files yet.<br><br>
+                        Click "Upload to ImgBB" → upload your image → copy the Direct URL → paste it above.<br><br>
+                        Your files will be saved permanently!
+                    </div>
+                `;
+                return;
+            }
+
+            galleryDiv.innerHTML = myFiles.map(file => `
+                <div class="image-card">
+                    <img src="${file.url}" 
+                         alt="${file.title}"
+                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22280%22 height=%22220%22%3E%3Crect width=%22280%22 height=%22220%22 fill=%22%23ecf0f1%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 fill=%22%23999%22%3E⚠️ Cannot Load%3C/text%3E%3Ctext x=%2250%25%22 y=%2265%25%22 text-anchor=%22middle%22 fill=%22%23999%22 font-size=%2211%22%3ECheck if URL is valid%3C/text%3E%3C/svg%3E'">
+                    <div class="image-info">
+                        <div class="image-title">${escapeHtml(file.title)}</div>
+                        <span class="badge">Served from File Server</span>
+                        <p style="font-size: 10px; color: #888; margin-top: 5px;">Added: ${file.dateAdded}</p>
+                        <button class="remove-btn" onclick="removeFile(${file.id})">Remove</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Load files when page opens
+        loadFiles();
+    </script>
+</body>
+
+</html>
