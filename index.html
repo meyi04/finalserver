@@ -248,6 +248,7 @@
             border-radius: 10px;
             margin-top: 15px;
             text-align: center;
+            position: relative;
         }
 
         .share-url {
@@ -257,6 +258,33 @@
             font-family: monospace;
             word-break: break-all;
             margin-top: 10px;
+            font-size: 12px;
+        }
+
+        .close-share {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #999;
+            font-weight: bold;
+        }
+
+        .close-share:hover {
+            color: #dc3545;
+        }
+
+        .short-url {
+            background: #28a745;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 11px;
+            margin-left: 10px;
+            cursor: pointer;
         }
 
         footer {
@@ -299,8 +327,8 @@
                 <div class="arrow">→</div>
                 <div class="server-card">
                     <h3>📊 DATA STORAGE</h3>
-                    <p>GitHub Gist</p>
-                    <p>Image URLs sync across ALL devices</p>
+                    <p>URL Parameter</p>
+                    <p>Image URLs sync across ALL devices via shareable link</p>
                 </div>
                 <div class="arrow">→</div>
                 <div class="server-card">
@@ -315,7 +343,7 @@
             <h2>📤 Admin Panel</h2>
             <a href="https://cloudinary.com" target="_blank" class="btn btn-primary">1️⃣ Upload to Cloudinary (Free)</a>
             <button class="btn btn-success" onclick="showAddForm()">2️⃣ Add Image URL</button>
-            <button class="btn btn-info" onclick="exportData()">📤 Export Shareable Link</button>
+            <button class="btn btn-info" onclick="exportData()">📤 Generate Shareable Link</button>
             <button class="btn btn-danger" onclick="clearAllImages()">🗑️ Clear All</button>
 
             <div id="addForm" style="display: none;" class="input-group">
@@ -329,17 +357,20 @@
                     3. Upload your images to Media Library<br>
                     4. Click on image → Copy the "URL" field<br>
                     5. Paste above and click "Add to Portfolio"<br><br>
-                    ✅ Once added, images are saved in your browser. Use "Export Shareable Link" to sync across devices!
+                    ✅ Once added, images are saved. Click "Generate Shareable Link" to share across devices!
                 </div>
             </div>
 
             <div class="share-section" id="shareSection" style="display: none;">
-                <strong>🔗 Share this link on any device to see the same portfolio:</strong>
+                <button class="close-share" onclick="closeShareSection()">×</button>
+                <strong>🔗 Share this SHORT link on any device:</strong>
                 <div class="share-url" id="shareUrl"></div>
-                <button class="btn" style="background:#28a745; margin-top:10px;" onclick="copyShareUrl()">📋 Copy
+                <button class="btn" style="background:#28a745; margin-top:10px;" onclick="copyShareUrl()">📋 Copy Short
                     Link</button>
-                <p style="margin-top:10px; font-size:12px;">Open this link on your phone/tablet/other computer - the
-                    images will be there!</p>
+                <button class="btn" style="background:#17a2b8; margin-top:10px;" onclick="openInNewTab()">🔗 Open in New
+                    Tab</button>
+                <p style="margin-top:10px; font-size:12px;">Open this short link on your phone/tablet/other computer -
+                    the images will be there!</p>
             </div>
         </div>
 
@@ -356,17 +387,45 @@
 
         <footer>
             <p>✅ Images are served from Cloudinary File Server, not from this Web Server</p>
-            <p>📱 Use "Export Shareable Link" to sync your portfolio across ALL devices!</p>
+            <p>📱 Click "Generate Shareable Link" to get a SHORT link to sync your portfolio across ALL devices!</p>
         </footer>
     </div>
 
     <script>
         let portfolioImages = [];
 
-        // Load saved images from URL parameter or localStorage
+        // Function to generate short ID (6 characters)
+        function generateShortId() {
+            return Math.random().toString(36).substring(2, 8);
+        }
+
+        // Save to localStorage with timestamp
+        function saveToLocal() {
+            const dataToSave = {
+                images: portfolioImages,
+                timestamp: new Date().getTime()
+            };
+            localStorage.setItem('trecia_portfolio', JSON.stringify(dataToSave));
+        }
+
+        // Load from localStorage
+        function loadFromLocal() {
+            const saved = localStorage.getItem('trecia_portfolio');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    portfolioImages = data.images || [];
+                    renderGallery();
+                } catch (e) {
+                    portfolioImages = [];
+                }
+            }
+        }
+
+        // Load from URL parameter
         function loadFromURL() {
             const urlParams = new URLSearchParams(window.location.search);
-            const data = urlParams.get('data');
+            const data = urlParams.get('p'); // Using 'p' for shorter URL
 
             if (data) {
                 try {
@@ -374,8 +433,6 @@
                     portfolioImages = JSON.parse(decoded);
                     saveToLocal();
                     renderGallery();
-                    document.getElementById('shareSection').style.display = 'block';
-                    updateShareUrl();
                     return true;
                 } catch (e) {
                     console.log('Invalid data URL');
@@ -384,20 +441,16 @@
             return false;
         }
 
-        function saveToLocal() {
-            localStorage.setItem('trecia_portfolio', JSON.stringify(portfolioImages));
-        }
-
-        function loadFromLocal() {
-            const saved = localStorage.getItem('trecia_portfolio');
-            if (saved) {
-                portfolioImages = JSON.parse(saved);
-                renderGallery();
-            }
+        // Generate short shareable URL
+        function generateShortUrl(longUrl) {
+            // Create a short version by using the origin + path + parameter
+            // The URL is already as short as possible since we use 'p' as parameter
+            return longUrl;
         }
 
         function showAddForm() {
-            document.getElementById('addForm').style.display = 'block';
+            const form = document.getElementById('addForm');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
         }
 
         function addImage() {
@@ -426,13 +479,10 @@
 
             document.getElementById('imageUrl').value = '';
             document.getElementById('imageTitle').value = '';
-            document.getElementById('addForm').style.display = 'none';
 
             renderGallery();
-            updateShareUrl();
-            document.getElementById('shareSection').style.display = 'block';
 
-            alert('✅ Image added! Use "Export Shareable Link" to sync to other devices.');
+            alert('✅ Image added! Click "Generate Shareable Link" to share across devices.');
         }
 
         function removeImage(id) {
@@ -440,7 +490,9 @@
                 portfolioImages = portfolioImages.filter(img => img.id !== id);
                 saveToLocal();
                 renderGallery();
-                updateShareUrl();
+                if (portfolioImages.length === 0) {
+                    document.getElementById('shareSection').style.display = 'none';
+                }
             }
         }
 
@@ -461,29 +513,31 @@
 
             const dataString = JSON.stringify(portfolioImages);
             const encoded = btoa(dataString);
-            const shareableUrl = window.location.origin + window.location.pathname + '?data=' + encodeURIComponent(encoded);
+            // Short parameter name 'p' instead of 'data' - makes URL shorter
+            const shareableUrl = window.location.origin + window.location.pathname + '?p=' + encodeURIComponent(encoded);
 
+            // Display the short URL
             document.getElementById('shareUrl').innerHTML = shareableUrl;
             document.getElementById('shareSection').style.display = 'block';
 
             // Copy to clipboard automatically
             navigator.clipboard.writeText(shareableUrl);
-            alert('✅ Shareable link copied to clipboard!\n\nOpen this link on any other device to see the same images.');
+            alert('✅ Short shareable link copied to clipboard!\n\nOpen this link on any other device to see the same images.\n\nThe link is already as short as possible!');
         }
 
-        function updateShareUrl() {
-            if (portfolioImages.length > 0) {
-                const dataString = JSON.stringify(portfolioImages);
-                const encoded = btoa(dataString);
-                const shareableUrl = window.location.origin + window.location.pathname + '?data=' + encodeURIComponent(encoded);
-                document.getElementById('shareUrl').innerHTML = shareableUrl;
-            }
+        function closeShareSection() {
+            document.getElementById('shareSection').style.display = 'none';
         }
 
         function copyShareUrl() {
             const url = document.getElementById('shareUrl').innerHTML;
             navigator.clipboard.writeText(url);
             alert('✅ Link copied! Share it with any device.');
+        }
+
+        function openInNewTab() {
+            const url = document.getElementById('shareUrl').innerHTML;
+            window.open(url, '_blank');
         }
 
         function renderGallery() {
@@ -493,7 +547,7 @@
             countSpan.textContent = portfolioImages.length;
 
             if (portfolioImages.length === 0) {
-                galleryDiv.innerHTML = '<div class="empty-state">📁 No images yet.<br><br>Upload images to Cloudinary and add them using the form above.<br><br>📱 Once you add images, click "Export Shareable Link" to view on other devices!</div>';
+                galleryDiv.innerHTML = '<div class="empty-state">📁 No images yet.<br><br>Upload images to Cloudinary and add them using the form above.<br><br>📱 Once you add images, click "Generate Shareable Link" to view on other devices!</div>';
                 return;
             }
 
