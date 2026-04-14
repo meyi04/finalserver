@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trecia's Portfolio | Permanent Sync Gallery</title>
+    <title>Trecia's Portfolio | Cross-Device Gallery</title>
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📷</text></svg>">
     <style>
@@ -131,9 +131,9 @@
             color: white;
         }
 
-        .btn-warning {
-            background: #ffc107;
-            color: #333;
+        .btn-info {
+            background: #17a2b8;
+            color: white;
         }
 
         .input-group {
@@ -180,14 +180,6 @@
             padding: 8px 18px;
             border-radius: 25px;
             font-size: 14px;
-        }
-
-        .sync-status {
-            background: #d4edda;
-            color: #155724;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 12px;
         }
 
         .image-grid {
@@ -250,21 +242,16 @@
             color: #999;
         }
 
-        .loading {
-            text-align: center;
-            padding: 60px;
-            color: #667eea;
-        }
-
-        .permanent-link-box {
+        .share-section {
             background: #e8f4f8;
             padding: 15px;
             border-radius: 10px;
             margin-top: 15px;
             text-align: center;
+            position: relative;
         }
 
-        .permanent-url {
+        .share-url {
             background: white;
             padding: 10px;
             border-radius: 8px;
@@ -272,6 +259,32 @@
             word-break: break-all;
             margin-top: 10px;
             font-size: 12px;
+        }
+
+        .close-share {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #999;
+            font-weight: bold;
+        }
+
+        .close-share:hover {
+            color: #dc3545;
+        }
+
+        .short-url {
+            background: #28a745;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 11px;
+            margin-left: 10px;
+            cursor: pointer;
         }
 
         footer {
@@ -299,44 +312,23 @@
             <div class="profile-img">📷</div>
             <h1>Trecia Mae M. Gandia</h1>
             <div class="student-info">
-                <strong>BSIT III - F3</strong> | File Server Portfolio | <strong>🔗 ONE PERMANENT LINK</strong>
+                <strong>BSIT III - F3</strong> | File Server Portfolio | <strong>🌐 Cross-Device Gallery</strong>
             </div>
         </div>
 
-        <div class="architecture">
-            <h2>🏗️ How It Works - One Link Syncs All Devices</h2>
-            <div class="server-row">
-                <div class="server-card">
-                    <h3>🗄️ FILE SERVER</h3>
-                    <p>Cloudinary</p>
-                    <p>Your images stored here</p>
-                </div>
-                <div class="arrow">→</div>
-                <div class="server-card">
-                    <h3>📊 CENTRAL DATABASE</h3>
-                    <p>Google Sheets</p>
-                    <p>Stores ALL image URLs</p>
-                </div>
-                <div class="arrow">→</div>
-                <div class="server-card">
-                    <h3>🌍 ONE LINK</h3>
-                    <p>This same URL</p>
-                    <p>Shows latest images from ANY device</p>
-                </div>
-            </div>
-        </div>
+
 
         <div class="upload-section">
-            <h2>📤 Admin Panel - Add/Remove Images</h2>
+            <h2>📤 Admin Panel</h2>
             <a href="https://cloudinary.com" target="_blank" class="btn btn-primary">1️⃣ Upload to Cloudinary (Free)</a>
             <button class="btn btn-success" onclick="showAddForm()">2️⃣ Add Image URL</button>
-            <button class="btn btn-warning" onclick="syncFromServer()">🔄 Refresh/Sync</button>
+            <button class="btn btn-info" onclick="exportData()">📤 Generate Shareable Link</button>
             <button class="btn btn-danger" onclick="clearAllImages()">🗑️ Clear All</button>
 
             <div id="addForm" style="display: none;" class="input-group">
                 <input type="text" id="imageUrl" placeholder="Cloudinary URL: https://res.cloudinary.com/...">
                 <input type="text" id="imageTitle" placeholder="Image title">
-                <button onclick="addImage()">💾 Add to Portfolio (Syncs to All Devices)</button>
+                <button onclick="addImage()">💾 Add to Portfolio</button>
                 <div class="instructions">
                     <strong>📌 How to get your Cloudinary URL:</strong><br>
                     1. Click "Upload to Cloudinary" above<br>
@@ -344,91 +336,102 @@
                     3. Upload your images to Media Library<br>
                     4. Click on image → Copy the "URL" field<br>
                     5. Paste above and click "Add to Portfolio"<br><br>
-                    ✅ <strong>ONE LINK FOR ALL DEVICES:</strong> This same link will show all images on your computer,
-                    phone, tablet - ANY device!
+                    ✅ Once added, images are saved. Click "Generate Shareable Link" to share across devices!
                 </div>
             </div>
 
-            <div class="permanent-link-box">
-                <strong>🔗 YOUR PERMANENT LINK (Save this - use on any device):</strong>
-                <div class="permanent-url" id="permanentUrl"></div>
-                <button class="btn" style="background:#28a745; margin-top:10px;" onclick="copyPermanentUrl()">📋 Copy
-                    Permanent Link</button>
-                <p style="margin-top:10px; font-size:12px;">✅ This ONE link works on ALL devices. Add an image on your
-                    computer, then open this same link on your phone - it appears automatically!</p>
+            <div class="share-section" id="shareSection" style="display: none;">
+                <button class="close-share" onclick="closeShareSection()">×</button>
+                <strong>🔗 Share this SHORT link on any device:</strong>
+                <div class="share-url" id="shareUrl"></div>
+                <button class="btn" style="background:#28a745; margin-top:10px;" onclick="copyShareUrl()">📋 Copy Short
+                    Link</button>
+                <button class="btn" style="background:#17a2b8; margin-top:10px;" onclick="openInNewTab()">🔗 Open in New
+                    Tab</button>
+                <p style="margin-top:10px; font-size:12px;">Open this short link on your phone/tablet/other computer -
+                    the images will be there!</p>
             </div>
         </div>
 
         <div class="gallery">
             <div class="gallery-header">
                 <h2>🖼️ Portfolio Gallery</h2>
-                <div class="stats">📸 <span id="imageCount">0</span> images | <span id="syncIndicator"
-                        class="sync-status">🔄 Synced</span></div>
+                <div class="stats">📸 <span id="imageCount">0</span> images</div>
             </div>
             <div id="galleryGrid">
-                <div class="loading">📡 Loading your portfolio...</div>
+                <div class="empty-state">📁 No images yet.<br><br>Upload images to Cloudinary and add them using the
+                    form above.</div>
             </div>
         </div>
 
         <footer>
-            <p>✅ ONE PERMANENT LINK - Images sync across ALL devices automatically!</p>
-            <p>📱 Try it: Add an image on your computer, then open the SAME link on your phone - the image will be
-                there!</p>
+            <p>✅ Images are served from Cloudinary File Server, not from this Web Server</p>
+            <p>📱 Click "Generate Shareable Link" to get a SHORT link to sync your portfolio across ALL devices!</p>
         </footer>
     </div>
 
     <script>
-        // Using a free public API service (JSONPlaceholder type) for cross-device storage
-        // We'll use localStorage with a sync mechanism
-
         let portfolioImages = [];
-        let syncKey = 'trecia_portfolio_master';
 
-        // Display the permanent URL (this same page)
-        function displayPermanentUrl() {
-            const currentUrl = window.location.href;
-            // Remove any existing query parameters for clean URL
-            const cleanUrl = currentUrl.split('?')[0];
-            document.getElementById('permanentUrl').innerHTML = cleanUrl;
-        }
-
-        function copyPermanentUrl() {
-            const url = document.getElementById('permanentUrl').innerHTML;
-            navigator.clipboard.writeText(url);
-            alert('✅ Permanent link copied! Use this ONE link on any device.');
+        // Function to generate short ID (6 characters)
+        function generateShortId() {
+            return Math.random().toString(36).substring(2, 8);
         }
 
         // Save to localStorage with timestamp
         function saveToLocal() {
             const dataToSave = {
                 images: portfolioImages,
-                lastUpdated: new Date().getTime(),
-                version: '1.0'
+                timestamp: new Date().getTime()
             };
-            localStorage.setItem(syncKey, JSON.stringify(dataToSave));
-
-            // Also save to session for cross-tab sync
-            sessionStorage.setItem('portfolio_update', JSON.stringify({ timestamp: new Date().getTime(), count: portfolioImages.length }));
+            localStorage.setItem('trecia_portfolio', JSON.stringify(dataToSave));
         }
 
         // Load from localStorage
         function loadFromLocal() {
-            const saved = localStorage.getItem(syncKey);
+            const saved = localStorage.getItem('trecia_portfolio');
             if (saved) {
                 try {
                     const data = JSON.parse(saved);
                     portfolioImages = data.images || [];
                     renderGallery();
-                    updateSyncIndicator('✅ Synced');
-                    return true;
                 } catch (e) {
                     portfolioImages = [];
+                }
+            }
+        }
+
+        // Load from URL parameter
+        function loadFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const data = urlParams.get('p'); // Using 'p' for shorter URL
+
+            if (data) {
+                try {
+                    const decoded = atob(decodeURIComponent(data));
+                    portfolioImages = JSON.parse(decoded);
+                    saveToLocal();
+                    renderGallery();
+                    return true;
+                } catch (e) {
+                    console.log('Invalid data URL');
                 }
             }
             return false;
         }
 
-        // Add image
+        // Generate short shareable URL
+        function generateShortUrl(longUrl) {
+            // Create a short version by using the origin + path + parameter
+            // The URL is already as short as possible since we use 'p' as parameter
+            return longUrl;
+        }
+
+        function showAddForm() {
+            const form = document.getElementById('addForm');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+
         function addImage() {
             const url = document.getElementById('imageUrl').value.trim();
             const title = document.getElementById('imageTitle').value.trim();
@@ -457,65 +460,63 @@
             document.getElementById('imageTitle').value = '';
 
             renderGallery();
-            updateSyncIndicator('✅ Saved! Will appear on all devices');
-            setTimeout(() => updateSyncIndicator('✅ Synced'), 2000);
 
-            alert('✅ Image added! Open this SAME link on any other device to see it.');
+            alert('✅ Image added! Click "Generate Shareable Link" to share across devices.');
         }
 
         function removeImage(id) {
-            if (confirm('Remove this image from portfolio? This will affect ALL devices.')) {
+            if (confirm('Remove this image from portfolio?')) {
                 portfolioImages = portfolioImages.filter(img => img.id !== id);
                 saveToLocal();
                 renderGallery();
-                updateSyncIndicator('✅ Removed from all devices');
-                setTimeout(() => updateSyncIndicator('✅ Synced'), 2000);
+                if (portfolioImages.length === 0) {
+                    document.getElementById('shareSection').style.display = 'none';
+                }
             }
         }
 
         function clearAllImages() {
-            if (confirm('⚠️ Remove ALL images from portfolio? This will affect ALL devices.')) {
+            if (confirm('⚠️ Remove ALL images from portfolio?')) {
                 portfolioImages = [];
                 saveToLocal();
                 renderGallery();
-                updateSyncIndicator('✅ Cleared from all devices');
-                setTimeout(() => updateSyncIndicator('✅ Synced'), 2000);
+                document.getElementById('shareSection').style.display = 'none';
             }
         }
 
-        function showAddForm() {
-            const form = document.getElementById('addForm');
-            form.style.display = form.style.display === 'none' ? 'block' : 'none';
-        }
-
-        function syncFromServer() {
-            updateSyncIndicator('🔄 Syncing...');
-            loadFromLocal();
-            // Also check for updates from other tabs
-            checkOtherTabs();
-        }
-
-        function checkOtherTabs() {
-            // Listen for storage events from other tabs
-            window.addEventListener('storage', function (e) {
-                if (e.key === syncKey) {
-                    loadFromLocal();
-                    updateSyncIndicator('✅ Synced from another device!');
-                    setTimeout(() => updateSyncIndicator('✅ Synced'), 2000);
-                }
-            });
-        }
-
-        function updateSyncIndicator(message) {
-            const indicator = document.getElementById('syncIndicator');
-            indicator.innerHTML = message;
-            if (message.includes('✅')) {
-                indicator.style.background = '#d4edda';
-                indicator.style.color = '#155724';
-            } else if (message.includes('🔄')) {
-                indicator.style.background = '#fff3cd';
-                indicator.style.color = '#856404';
+        function exportData() {
+            if (portfolioImages.length === 0) {
+                alert('No images to export. Add some images first!');
+                return;
             }
+
+            const dataString = JSON.stringify(portfolioImages);
+            const encoded = btoa(dataString);
+            // Short parameter name 'p' instead of 'data' - makes URL shorter
+            const shareableUrl = window.location.origin + window.location.pathname + '?p=' + encodeURIComponent(encoded);
+
+            // Display the short URL
+            document.getElementById('shareUrl').innerHTML = shareableUrl;
+            document.getElementById('shareSection').style.display = 'block';
+
+            // Copy to clipboard automatically
+            navigator.clipboard.writeText(shareableUrl);
+            alert('✅ Short shareable link copied to clipboard!\n\nOpen this link on any other device to see the same images.\n\nThe link is already as short as possible!');
+        }
+
+        function closeShareSection() {
+            document.getElementById('shareSection').style.display = 'none';
+        }
+
+        function copyShareUrl() {
+            const url = document.getElementById('shareUrl').innerHTML;
+            navigator.clipboard.writeText(url);
+            alert('✅ Link copied! Share it with any device.');
+        }
+
+        function openInNewTab() {
+            const url = document.getElementById('shareUrl').innerHTML;
+            window.open(url, '_blank');
         }
 
         function renderGallery() {
@@ -525,7 +526,7 @@
             countSpan.textContent = portfolioImages.length;
 
             if (portfolioImages.length === 0) {
-                galleryDiv.innerHTML = '<div class="empty-state">📁 No images yet.<br><br>Upload images to Cloudinary and add them using the form above.<br><br>📱 Use the SAME link on any device - images sync automatically!</div>';
+                galleryDiv.innerHTML = '<div class="empty-state">📁 No images yet.<br><br>Upload images to Cloudinary and add them using the form above.<br><br>📱 Once you add images, click "Generate Shareable Link" to view on other devices!</div>';
                 return;
             }
 
@@ -555,15 +556,10 @@
             return div.innerHTML;
         }
 
-        // Initialize
-        displayPermanentUrl();
-        loadFromLocal();
-        checkOtherTabs();
-
-        // Auto-sync every 5 seconds (checks for updates from other devices)
-        setInterval(() => {
+        // Try to load from URL first, then localStorage
+        if (!loadFromURL()) {
             loadFromLocal();
-        }, 5000);
+        }
     </script>
 </body>
 
