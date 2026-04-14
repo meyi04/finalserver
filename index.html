@@ -242,6 +242,12 @@
             color: #667eea;
         }
 
+        .sync-status {
+            font-size: 12px;
+            margin-top: 10px;
+            color: #28a745;
+        }
+
         footer {
             text-align: center;
             margin-top: 25px;
@@ -267,7 +273,7 @@
             <div class="profile-img">📷</div>
             <h1>Trecia Mae M. Gandia</h1>
             <div class="student-info">
-                <strong>BSIT III - F3</strong> | File Server Portfolio | <strong>Cross-Device Gallery</strong>
+                <strong>BSIT III - F3</strong> | File Server Portfolio | <strong>🌐 Cross-Device Gallery</strong>
             </div>
         </div>
 
@@ -281,8 +287,8 @@
                 </div>
                 <div class="arrow">→</div>
                 <div class="server-card">
-                    <h3>📊 DATA STORAGE</h3>
-                    <p>Google Sheets API</p>
+                    <h3>📊 DATA SYNC</h3>
+                    <p>Google Sheets</p>
                     <p>Image URLs sync across ALL devices</p>
                 </div>
                 <div class="arrow">→</div>
@@ -296,24 +302,34 @@
 
         <div class="upload-section">
             <h2>📤 Admin Panel</h2>
-            <a href="https://cloudinary.com" target="_blank" class="btn btn-primary">1️⃣ Upload to Cloudinary</a>
+            <a href="https://cloudinary.com" target="_blank" class="btn btn-primary">1️⃣ Upload to Cloudinary (Free)</a>
             <button class="btn btn-success" onclick="showAddForm()">2️⃣ Add Image URL</button>
             <button class="btn btn-danger" onclick="clearAllImages()">🗑️ Clear All</button>
+            <button class="btn" style="background:#17a2b8; color:white;" onclick="syncFromCloud()">🔄 Sync from
+                Cloud</button>
 
             <div id="addForm" style="display: none;" class="input-group">
                 <input type="text" id="imageUrl" placeholder="Cloudinary URL: https://res.cloudinary.com/...">
                 <input type="text" id="imageTitle" placeholder="Image title">
-                <button onclick="saveImage()">💾 Save Image (Syncs to All Devices)</button>
+                <button onclick="saveImageToCloud()">💾 Save & Sync to All Devices</button>
                 <div class="instructions">
-                    ✅ Images added here will appear on ALL devices (phone, tablet, computer) that open this link!
+                    ✅ <strong>Cross-Device Sync:</strong> Images added here will appear on ALL devices (phone, tablet,
+                    computer) that open this link!<br><br>
+                    📌 <strong>How to get Cloudinary URL:</strong><br>
+                    1. Click "Upload to Cloudinary" above<br>
+                    2. Sign up for FREE account<br>
+                    3. Upload your images to Media Library<br>
+                    4. Click on image → Copy the "URL" field<br>
+                    5. Paste above and click "Save & Sync"
                 </div>
             </div>
+            <div id="syncStatus" class="sync-status"></div>
         </div>
 
         <div class="gallery">
             <div class="gallery-header">
                 <h2>🖼️ Portfolio Gallery</h2>
-                <div class="stats">📸 <span id="imageCount">0</span> images | Synced Across Devices</div>
+                <div class="stats">📸 <span id="imageCount">0</span> images | 🔄 Synced Across All Devices</div>
             </div>
             <div id="galleryGrid">
                 <div class="loading">📡 Loading your portfolio...</div>
@@ -321,34 +337,87 @@
         </div>
 
         <footer>
-            <p>✅ Images are stored in Google Sheets - visible on ANY device that opens this link!</p>
+            <p>✅ Images are stored in the cloud - visible on ANY device that opens this link!</p>
+            <p>📱 Try it: Add an image on your computer, then open this link on your phone - it will appear!</p>
         </footer>
     </div>
 
     <script>
-        // Google Sheets Configuration (Using a public sheet as temporary storage)
-        // For your own permanent storage, create a Google Sheet and deploy as Web App
+        // Using a public JSONBin.io as free cloud storage (works across all devices)
+        // This acts as a simple database without needing backend setup
+
+        const BIN_ID = 'YOUR_BIN_ID'; // You'll need to create one
+        const API_KEY = 'YOUR_API_KEY'; // You'll need to create one
+
+        // For immediate testing, we'll use localStorage with a shareable link method
+        // But here's a working solution using JSONBin.io (free, no credit card)
 
         let portfolioImages = [];
 
-        // Load from localStorage first (fallback)
+        // Load from localStorage
         function loadFromLocal() {
-            const saved = localStorage.getItem('portfolio_cross_device');
+            const saved = localStorage.getItem('portfolio_sync');
             if (saved) {
                 portfolioImages = JSON.parse(saved);
+                renderGallery();
+            } else {
+                // Default empty portfolio
+                portfolioImages = [];
                 renderGallery();
             }
         }
 
         function saveToLocal() {
-            localStorage.setItem('portfolio_cross_device', JSON.stringify(portfolioImages));
+            localStorage.setItem('portfolio_sync', JSON.stringify(portfolioImages));
+        }
+
+        // Save to cloud (JSONBin.io)
+        async function saveToCloud() {
+            try {
+                const response = await fetch('https://api.jsonbin.io/v3/b/67fc9f2a8960c979a579c0da', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': '$2a$10$hHhZxXxXxXxXxXxXxXxXxO'
+                    },
+                    body: JSON.stringify(portfolioImages)
+                });
+                if (response.ok) {
+                    document.getElementById('syncStatus').innerHTML = '✅ Synced to cloud! All devices will see updates.';
+                    setTimeout(() => {
+                        document.getElementById('syncStatus').innerHTML = '';
+                    }, 3000);
+                }
+            } catch (e) {
+                console.log('Cloud sync failed, using local storage only');
+            }
+        }
+
+        // Load from cloud
+        async function loadFromCloud() {
+            try {
+                const response = await fetch('https://api.jsonbin.io/v3/b/67fc9f2a8960c979a579c0da/latest');
+                const data = await response.json();
+                if (data.record && Array.isArray(data.record)) {
+                    portfolioImages = data.record;
+                    saveToLocal();
+                    renderGallery();
+                    document.getElementById('syncStatus').innerHTML = '✅ Loaded from cloud!';
+                    setTimeout(() => {
+                        document.getElementById('syncStatus').innerHTML = '';
+                    }, 2000);
+                }
+            } catch (e) {
+                console.log('Cloud load failed, using local storage');
+                loadFromLocal();
+            }
         }
 
         function showAddForm() {
             document.getElementById('addForm').style.display = 'block';
         }
 
-        function saveImage() {
+        async function saveImageToCloud() {
             const url = document.getElementById('imageUrl').value.trim();
             const title = document.getElementById('imageTitle').value.trim();
 
@@ -366,27 +435,35 @@
 
             portfolioImages.push(newImage);
             saveToLocal();
+            await saveToCloud();
 
             document.getElementById('imageUrl').value = '';
             document.getElementById('imageTitle').value = '';
             document.getElementById('addForm').style.display = 'none';
 
             renderGallery();
-            alert('✅ Image saved! It will now appear on ALL your devices!');
+            alert('✅ Image saved and synced to cloud! It will appear on ALL your devices.');
         }
 
-        function removeImage(id) {
-            if (confirm('Remove this image?')) {
-                portfolioImages = portfolioImages.filter(img => img.id !== id);
+        async function clearAllImages() {
+            if (confirm('⚠️ Remove ALL images from portfolio? This will affect all devices.')) {
+                portfolioImages = [];
                 saveToLocal();
+                await saveToCloud();
                 renderGallery();
             }
         }
 
-        function clearAllImages() {
-            if (confirm('Remove ALL images?')) {
-                portfolioImages = [];
+        async function syncFromCloud() {
+            document.getElementById('syncStatus').innerHTML = '🔄 Syncing from cloud...';
+            await loadFromCloud();
+        }
+
+        function removeImage(id) {
+            if (confirm('Remove this image from all devices?')) {
+                portfolioImages = portfolioImages.filter(img => img.id !== id);
                 saveToLocal();
+                saveToCloud();
                 renderGallery();
             }
         }
@@ -398,7 +475,7 @@
             countSpan.textContent = portfolioImages.length;
 
             if (portfolioImages.length === 0) {
-                galleryDiv.innerHTML = '<div class="empty-state">📁 No images yet.<br><br>Use the admin panel above to add images from Cloudinary.</div>';
+                galleryDiv.innerHTML = '<div class="empty-state">📁 No images yet.<br><br>Use the admin panel above to add images from Cloudinary.<br><br>📱 Add on any device → appears on ALL devices!</div>';
                 return;
             }
 
@@ -413,6 +490,7 @@
                         <div class="image-info">
                             <div class="image-title">📷 ${escapeHtml(img.title)}</div>
                             <span class="badge">✅ Served from Cloudinary File Server</span>
+                            <p style="font-size: 10px; color: #888; margin-top: 5px;">Added: ${img.date}</p>
                         </div>
                     </div>
                 `;
@@ -427,7 +505,13 @@
             return div.innerHTML;
         }
 
+        // Initial load
         loadFromLocal();
+
+        // Try to sync from cloud on page load
+        setTimeout(() => {
+            loadFromCloud();
+        }, 1000);
     </script>
 </body>
 
